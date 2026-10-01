@@ -4,7 +4,6 @@ import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import type { IRequestUser } from './auth.interface';
 import { AuthService } from './auth.service';
-<<<<<<< HEAD
 import { AuthValidation } from './authValidation';
 
 const registerPatient = catchAsync(async (req: Request, res: Response) => {
@@ -18,12 +17,6 @@ const registerPatient = catchAsync(async (req: Request, res: Response) => {
   }
 
   const result = await AuthService.registerPatient(payload.data);
-=======
-
-const registerPatient = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
-  const result = await AuthService.registerPatient(payload);
->>>>>>> origin/main
 
   const { accessToken, refreshToken, user, patient } = result;
 
@@ -134,7 +127,6 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
 
   const result = await AuthService.googleLogin(payload);
 
-<<<<<<< HEAD
   const { accessToken, refreshToken } = result;
 
   res.cookie('accessToken', accessToken, {
@@ -158,13 +150,6 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
       accessToken,
       refreshToken,
     },
-=======
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'New tokens generated successfully',
-    data: result,
->>>>>>> origin/main
   });
 });
 
