@@ -9,9 +9,12 @@ export interface IRegisterPatientPayload {
   name: string;
   email: string;
   password: string;
+<<<<<<< HEAD
   patient: {
     contactNumber?: string;
   };
+=======
+>>>>>>> origin/main
 }
 
 export interface IRequestUser {

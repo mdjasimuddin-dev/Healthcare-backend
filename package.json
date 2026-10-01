@@ -28,10 +28,17 @@
     "google-auth-library": "^11.1.0",
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
+<<<<<<< HEAD
     "pg": "^8.22.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
+=======
+    "pg": "^8.22.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.14",
+>>>>>>> origin/main
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

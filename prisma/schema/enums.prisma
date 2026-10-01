@@ -19,5 +19,9 @@ enum Gender {
 
 enum AuthProvider {
   GOOGLE
+<<<<<<< HEAD
   CREDENTIAL
+=======
+  CREDENTIALS
+>>>>>>> origin/main
 }
