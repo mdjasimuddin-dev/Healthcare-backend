@@ -4,11 +4,7 @@ model User {
   email              String
   password           String?
   googleId           String?      @unique
-<<<<<<< HEAD
   AuthProvider       AuthProvider @default(CREDENTIAL)
-=======
-  authProvider       AuthProvider @default(CREDENTIALS)
->>>>>>> origin/main
   emailVerified      Boolean      @default(false)
   role               Role         @default(PATIENT)
   status             UserStatus   @default(ACTIVE)

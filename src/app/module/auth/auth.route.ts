@@ -1,17 +1,18 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import z from 'zod';
 import { Role } from '../../../generated/prisma/enums';
 import { auth } from '../../middleware/checkAuth';
+import { catchAsync } from '../../utils/catchAsync';
 import { AuthController } from './auth.controller';
 import { AuthValidation } from './authValidation';
 
 const router = Router();
 
-router.post(
-  '/register',
-  (req: Request, res: Response, next: NextFunction) => {
+const ValidateRequest = (zodSchema: z.ZodObject) => {
+  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const payload = req.body ?? {};
-      const result = AuthValidation.PatientRegistrationZodSchema.safeParse(payload);
+      const result = zodSchema.safeParse(payload);
       if (!result.success) {
         const errorFormat = result.error.issues.map((issue) => issue.message).join();
         throw new Error(errorFormat);
@@ -23,7 +24,12 @@ router.post(
     } catch (error) {
       next(error);
     }
-  },
+  });
+};
+
+router.post(
+  '/register',
+  ValidateRequest(AuthValidation.PatientRegistrationZodSchema),
   AuthController.registerPatient
 );
 router.post('/login', AuthController.loginUser);
