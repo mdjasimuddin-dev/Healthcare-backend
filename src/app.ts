@@ -1,8 +1,10 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import crypto from 'crypto';
 import express, { NextFunction, type Application, type Request, type Response } from 'express';
 import httpStatus from 'http-status';
 import config from './app/config';
+import { redisClient } from './app/lib/redis';
 import { globalErrorHandler } from './app/middleware/globalErrorHandler';
 import { notFound } from './app/middleware/notFound';
 import { AuthRoutes } from './app/module/auth/auth.route';
@@ -24,11 +26,22 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/v1/auth', AuthRoutes);
-app.post('/test', async (req: Request, res: Response, next: NextFunction) => {
+app.get('/test', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const otp = crypto.randomInt(100000, 1000000);
+    console.log(otp);
+
+    redisClient.set('forget-password-opt:patient1@gmail.com', otp, {
+      expiration: {
+        type: 'EX',
+        value: 30,
+      },
+    });
+
     res.status(httpStatus.OK).json({
       success: true,
-      message: 'Welcome to PH Healthcare System Backend',
+      data: otp,
+      message: 'OTP send for forget password!',
     });
   } catch (error) {
     next(error);
