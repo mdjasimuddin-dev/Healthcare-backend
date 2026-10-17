@@ -28,8 +28,13 @@ export default {
   tester_doctor_email: process.env.TESTER_DOCTOR_EMAIL!,
   tester_doctor_password: process.env.TESTER_DOCTOR_PASSWORD!,
 
-  redis_user: process.env.REDIS_USER,
-  redis_password: process.env.REDIS_PASSWORD,
-  redis_host: process.env.REDIS_HOST,
-  redis_port: process.env.REDIS_PORT,
+  redis_user: process.env.REDIS_USER!,
+  redis_password: process.env.REDIS_PASSWORD!,
+  redis_host: process.env.REDIS_HOST!,
+  redis_port: process.env.REDIS_PORT!,
+
+
+  smtp_user : process.env.SMTP_USER!,
+  smtp_password: process.env.SMTP_PASSWORD!,
+  email_sender : process.env.SMTP_EMAIL_SENDER!,
 };

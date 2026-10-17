@@ -1,10 +1,14 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import ejs from 'ejs';
 import { TokenPayload } from 'google-auth-library';
 import type { JwtPayload, SignOptions } from 'jsonwebtoken';
+import path from 'path';
 import { AuthProvider, Role, UserStatus } from '../../../generated/prisma/enums';
 import config from '../../config';
+import { generateHackedAlertEmailTemplate } from '../../lib/generateHackedAlertEmailTemplate';
 import { googleClient } from '../../lib/googleAuth';
+import { transporter } from '../../lib/nodemailer';
 import { prisma } from '../../lib/prisma';
 import { redisClient } from '../../lib/redis';
 import { jwtUtils } from '../../utils/jwt';
@@ -357,6 +361,20 @@ const forgetPassword = async (payload: IForgetPasswordPayload) => {
       value: 3 * 60,
     },
   });
+
+  const templatePath = path.join(process.cwd(), 'src/app/templates/forget-password.ejs');
+
+  const html = await ejs.renderFile(templatePath, {
+    otp,
+  });
+
+  transporter.sendMail({
+    from: config.email_sender,
+    to: isUserExits.email,
+    // subject: `HACKED | SECURITY ALERT | Unauthorized Access Detected Sign-In ${isUserExits.email}`,
+    subject: `Forget Password`,
+    html,
+  });
 };
 
 const resetPassword = async (payload: IResetPasswordPayload) => {
@@ -409,6 +427,14 @@ const resetPassword = async (payload: IResetPasswordPayload) => {
     data: {
       password: hashNewPassword,
     },
+  });
+
+  transporter.sendMail({
+    from: config.email_sender,
+    to: isUserExits.email,
+    // subject: `HACKED | SECURITY ALERT | Unauthorized Access Detected Sign-In ${isUserExits.email}`,
+    subject: `Your Password is Changed`,
+    html: generateHackedAlertEmailTemplate(isUserExits.email),
   });
 
   await redisClient.del([key]);
