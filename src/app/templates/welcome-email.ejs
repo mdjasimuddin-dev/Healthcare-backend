@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to <%= appName %></title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6f8;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      }
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        background-color: #f4f6f8;
+        padding: 40px 0;
+      }
+      .main-table {
+        background-color: #ffffff;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 580px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-collapse: collapse;
+        overflow: hidden;
+      }
+      .content-cell {
+        padding: 40px 35px;
+      }
+      .logo {
+        font-size: 24px;
+        font-weight: 700;
+        color: #111827;
+        text-decoration: none;
+        letter-spacing: -0.5px;
+      }
+      .title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 24px 0 12px 0;
+      }
+      .text {
+        font-size: 15px;
+        line-height: 24px;
+        color: #4b5563;
+        margin: 0 0 16px 0;
+      }
+      .btn-container {
+        margin: 30px 0;
+        text-align: center;
+      }
+      .btn {
+        display: inline-block;
+        background-color: #2563eb;
+        color: #ffffff !important;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 13px 32px;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+      }
+      .feature-box {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .feature-item {
+        font-size: 14px;
+        line-height: 22px;
+        color: #334155;
+        margin-bottom: 10px;
+      }
+      .feature-item:last-child {
+        margin-bottom: 0;
+      }
+      .divider {
+        border: none;
+        border-top: 1px solid #e5e7eb;
+        margin: 30px 0 20px 0;
+      }
+      .footer-text {
+        font-size: 13px;
+        line-height: 20px;
+        color: #9ca3af;
+        margin: 0;
+        text-align: center;
+      }
+      .social-links {
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      .social-links a {
+        color: #6b7280;
+        text-decoration: none;
+        margin: 0 8px;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <center class="wrapper">
+      <table class="main-table" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+        <tr>
+          <td class="content-cell">
+            <!-- Brand Logo -->
+            <div style="text-align: left">
+              <a href="<%= appUrl %>" class="logo"><%= appName %></a>
+            </div>
+
+            <h1 class="title">Welcome aboard, <%= userName ? userName : 'Friend' %>! 🎉</h1>
+
+            <p class="text">
+              Your account has been successfully created and verified. We are thrilled to have you
+              with us at <strong><%= appName %></strong>.
+            </p>
+
+            <p class="text">
+              Everything is set up and ready to go. You can now log in, explore your dashboard, and
+              start using our platform.
+            </p>
+
+            <!-- Call to Action Button -->
+            <div class="btn-container">
+              <a href="<%= loginUrl %>" class="btn" target="_blank">Go to My Account</a>
+            </div>
+
+            <!-- Quick Tips / Getting Started Box -->
+            <div class="feature-box">
+              <strong style="display: block; font-size: 15px; color: #0f172a; margin-bottom: 8px"
+                >Here’s how you can get started:</strong
+              >
+              <div class="feature-item">
+                • <strong>Complete your profile:</strong> Add your details to personalize your
+                experience.
+              </div>
+              <div class="feature-item">
+                • <strong>Explore the catalog:</strong> Browse through features, services, and
+                products.
+              </div>
+              <div class="feature-item">
+                • <strong>Secure your account:</strong> Keep your credentials safe and set up 2FA if
+                available.
+              </div>
+            </div>
+
+            <p class="text" style="font-size: 14px; color: #6b7280">
+              If you ever have any questions or run into issues, simply reply to this email or reach
+              out to our support team at
+              <a href="mailto:<%= supportEmail %>" style="color: #2563eb; text-decoration: none"
+                ><%= supportEmail %></a
+              >.
+            </p>
+
+            <hr class="divider" />
+
+            <!-- Footer -->
+            <div class="social-links">
+              <a href="<%= appUrl %>/help">Help Center</a> &bull;
+              <a href="<%= appUrl %>/terms">Terms</a> &bull;
+              <a href="<%= appUrl %>/privacy">Privacy Policy</a>
+            </div>
+
+            <p class="footer-text">
+              &copy; <%= new Date().getFullYear() %> <%= appName %>. All rights reserved.<br />
+              You are receiving this email because you signed up on <%= appName %>.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </body>
+</html>

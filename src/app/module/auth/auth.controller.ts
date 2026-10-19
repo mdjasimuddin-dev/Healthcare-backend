@@ -62,7 +62,7 @@ const verifyPatient = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: 'Verification OTP send',
+    message: 'Your patient account register successfully',
     data: {
       accessToken,
       refreshToken,

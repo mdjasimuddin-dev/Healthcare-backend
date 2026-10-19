@@ -96,6 +96,24 @@ const verifyPatientEmail = async (payload: IVerifyPatientEmailPayload) => {
   const otp = payload.otp;
   const email = payload.email.trim().toLowerCase();
 
+  const isUserExists = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (isUserExists) {
+    throw new Error('User already exits.');
+  }
+
+  if (isUserExists?.status == 'BLOCKED') {
+    throw new Error('User is blocked');
+  }
+
+  if (isUserExists?.isDeleted || isUserExists?.status === 'DELETED') {
+    throw new Error('User is deleted');
+  }
+
   const key = `patient-register-otp:${email}`;
 
   const redisOTP = await redisClient.get(key);
@@ -112,8 +130,6 @@ const verifyPatientEmail = async (payload: IVerifyPatientEmailPayload) => {
 
   const patientRegistrationKey = `patient-register-data:${email}`;
   const redisPatientData = await redisClient.get(patientRegistrationKey);
-
-  console.log('Redis store data : ', redisPatientData);
 
   if (!redisPatientData) {
     throw new Error('Patient data not exits into redis');
@@ -141,6 +157,8 @@ const verifyPatientEmail = async (payload: IVerifyPatientEmailPayload) => {
     include: { patient: true },
   });
 
+  redisClient.del(patientRegistrationKey);
+
   const { patient, ...user } = createdUser;
   const jwtPayload = {
     userId: user.id,
@@ -160,6 +178,31 @@ const verifyPatientEmail = async (payload: IVerifyPatientEmailPayload) => {
     config.jwt_refresh_secret,
     config.jwt_refresh_expires_in as SignOptions
   );
+
+  const appName = 'Smart Healthcare Limited';
+  const appUrl = 'mdjasimuddin.com.bd';
+  const userName = user?.name;
+  const supportEmail = config.email_sender;
+  const loginUrl = 'http://localhost:5000/login';
+
+  const emailVerifiedTempPath = path.join(process.cwd(), 'src/app/templates/welcome-email.ejs');
+
+  const EmailVerifiedTempData = {
+    appName,
+    appUrl,
+    userName,
+    supportEmail,
+    loginUrl,
+  };
+
+  const htmlContent = await ejs.renderFile(emailVerifiedTempPath, EmailVerifiedTempData);
+
+  transporter.sendMail({
+    from: config.email_sender,
+    to: email,
+    subject: `Welcome message form ${appName}`,
+    html: htmlContent,
+  });
 
   return {
     user,
