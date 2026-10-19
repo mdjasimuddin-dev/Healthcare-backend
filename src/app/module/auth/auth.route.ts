@@ -32,12 +32,18 @@ router.post(
   ValidateRequest(userValidation.PatientRegistrationZodSchema),
   AuthController.registerPatient
 );
+router.post(
+  '/verify-patient',
+  ValidateRequest(userValidation.EmailVerifyZodSchema),
+  AuthController.verifyPatient
+);
 router.post('/login', AuthController.loginUser);
 router.get(
   '/me',
   auth(Role.ADMIN, Role.DOCTOR, Role.PATIENT, Role.SUPER_ADMIN),
   AuthController.getMe
 );
+
 router.post('/refresh-token', AuthController.refreshToken);
 router.post('/google', AuthController.googleLogin);
 router.post(
@@ -50,4 +56,5 @@ router.post(
   ValidateRequest(userValidation.PasswordResetZodSchema),
   AuthController.resetPassword
 );
+
 export const AuthRoutes = router;
