@@ -1,8 +1,16 @@
 import { Router } from 'express';
 import { UserController } from './user.controller';
+import { upload } from '../../lib/multer';
+import { auth } from '../../middleware/checkAuth';
+import { Role } from '../../../generated/prisma/enums';
 
 const router = Router();
 
-router.post('/profile-image', UserController.uploadProfileImage);
+router.patch(
+  '/profile-image',
+  auth(Role.ADMIN, Role.SUPER_ADMIN, Role.DOCTOR, Role.PATIENT),
+  upload.single('image'),
+  UserController.uploadProfileImage
+);
 
-export const UserRoute = { router };
+export const UserRoute = router;
