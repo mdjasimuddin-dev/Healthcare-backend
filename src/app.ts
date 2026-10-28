@@ -9,6 +9,7 @@ import { globalErrorHandler } from './app/middleware/globalErrorHandler';
 import { notFound } from './app/middleware/notFound';
 import { AuthRoutes } from './app/module/auth/auth.route';
 import { UserRoute } from './app/module/user/user.route';
+import { getBkashIdToken } from './app/lib/bkash';
 
 const app: Application = express();
 
@@ -28,22 +29,16 @@ app.use(cookieParser());
 
 app.use('/api/v1/auth', AuthRoutes);
 app.use('/api/v1/user', UserRoute);
-app.get('/test', async (req: Request, res: Response, next: NextFunction) => {
+app.post('/test', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const otp = crypto.randomInt(100000, 1000000);
-    console.log(otp);
+    const result = await getBkashIdToken();
 
-    redisClient.set('forget-password-opt:patient1@gmail.com', otp, {
-      expiration: {
-        type: 'EX',
-        value: 30,
-      },
-    });
+    console.log(result, 'Bkash ID Token');
 
     res.status(httpStatus.OK).json({
       success: true,
-      data: otp,
-      message: 'OTP send for forget password!',
+      data: result,
+      // message: 'OTP send for forget password!',
     });
   } catch (error) {
     next(error);
