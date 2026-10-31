@@ -35,7 +35,9 @@ export const getBkashIdToken = async () => {
         }
       );
 
-      const bkashIdTokenResult = refreshTokenResponse.json();
+      const bkashIdTokenResult = await refreshTokenResponse.json();
+
+      console.log('Bkash ID Token Result print 40 no line Bkash.ts :', bkashIdTokenResult);
       bkashIdToken = bkashIdTokenResult.id_token;
 
       await redisClient.set(IdTokenKey, bkashIdToken as string, {

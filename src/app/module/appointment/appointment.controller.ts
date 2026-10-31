@@ -5,7 +5,10 @@ import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 
 const bookAppointment = catchAsync(async (req: Request, res: Response) => {
-  const result = await AppointmentService.createAppointmentService();
+  const payload = req.body;
+  const user = req.user!;
+
+  const result = await AppointmentService.createAppointmentService(payload, user);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
