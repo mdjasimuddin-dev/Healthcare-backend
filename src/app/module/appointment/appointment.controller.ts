@@ -13,17 +13,27 @@ const bookAppointment = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Appointment Booking Successfully',
+    message: 'Appointment Payment Initialize successfully',
     data: result,
   });
 });
 
-const paymentCreateSucessfully = catchAsync(async (req: Request, res: Response) => {
-  const { executeBkashPayment, redirectUrl } = await AppointmentService.bookAppointmentCallback(
-    req.query
-  );
+const payAppointment = catchAsync(async (req: Request, res: Response) => {
+  const payload = req.body;
+  const user = req.user!;
 
-  console.log('Execute Bkash Payment :', executeBkashPayment);
+  const result = await AppointmentService.payAppointment(payload, user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Appointment Payment Initialize successfully',
+    data: result,
+  });
+});
+
+const bookAppointmentCallback = catchAsync(async (req: Request, res: Response) => {
+  const { redirectUrl } = await AppointmentService.bookAppointmentCallback(req.query);
 
   res.redirect(redirectUrl);
 
@@ -31,8 +41,26 @@ const paymentCreateSucessfully = catchAsync(async (req: Request, res: Response) 
     statusCode: httpStatus.OK,
     success: true,
     message: 'Appointment Booking Successfully',
-    data: executeBkashPayment,
+    data: redirectUrl,
   });
 });
 
-export const AppointmentController = { bookAppointment, paymentCreateSucessfully };
+const cancleAppointment = catchAsync(async (req: Request, res: Response) => {
+  const payload = req.body;
+
+  const result = await AppointmentService.cancleAppointment(payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Appointment payment refund successfully',
+    data: result,
+  });
+});
+
+export const AppointmentController = {
+  bookAppointment,
+  payAppointment,
+  bookAppointmentCallback,
+  cancleAppointment,
+};

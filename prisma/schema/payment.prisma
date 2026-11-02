@@ -1,5 +1,5 @@
 model Payment {
-  id       String        @unique @default(uuid())
+  id       String        @id @default(uuid())
   status   PaymentStatus @default(UNPAID)
   amount   Decimal       @db.Decimal(10, 2)
   currency String        @default("BDT")
