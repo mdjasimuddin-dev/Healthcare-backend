@@ -11,6 +11,7 @@ import { AuthRoutes } from './app/module/auth/auth.route';
 import { UserRoute } from './app/module/user/user.route';
 import { getBkashIdToken } from './app/lib/bkash';
 import { AppointmentRoute } from './app/module/appointment/appointment.route';
+import { DoctorRoutes } from './app/module/doctor/doctor.routes';
 
 const app: Application = express();
 
@@ -31,6 +32,7 @@ app.use(cookieParser());
 app.use('/api/v1/auth', AuthRoutes);
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/appointment', AppointmentRoute);
+app.use('/api/v1/doctor', DoctorRoutes);
 app.post('/test', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await getBkashIdToken();

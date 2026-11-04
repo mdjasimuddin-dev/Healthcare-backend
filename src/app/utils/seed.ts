@@ -84,6 +84,16 @@ export const seedTesterAdmin = async () => {
         role: Role.ADMIN,
         needPasswordChange: false,
         emailVerified: true,
+        doctor: {
+          create: {
+            email,
+            name,
+            experienceYears: 5,
+            licenseNumber: 'BMDC-0001',
+            qualifications: 'MMBS',
+            specialization: 'Neurology',
+          },
+        },
       },
     });
 
