@@ -2,15 +2,18 @@ import { Multer } from 'multer';
 import { prisma } from '../../lib/prisma';
 import { UploadApiResponse } from 'cloudinary';
 import { cloudinary } from '../../lib/cloudinary';
-import { create } from 'node:domain';
-import { name } from 'ejs';
-import { url } from 'node:inspector';
 import { Role } from '../../../generated/prisma/enums';
 import bcrypt from 'bcryptjs';
 import config from '../../config';
+import crypto from 'crypto';
+import { redisClient } from '../../lib/redis';
+import path from 'node:path';
+import ejs from 'ejs';
+import { transporter } from '../../lib/nodemailer';
+import { IApplyAsDoctorPayload, IVerifyDoctorEmailPayload } from './doctor.interface';
 
 const applyAsDoctor = async (
-  payload: any,
+  payload: IApplyAsDoctorPayload,
   resume: Express.Multer.File | null,
   additionalFiles: Express.Multer.File[]
 ) => {
@@ -91,9 +94,102 @@ const applyAsDoctor = async (
     },
   });
 
+  const expirationSeconds = 60 * 60;
+  const email = payload.user.email;
+  const key = `doctor-application-otp:${email}`;
+  const otpValue = crypto.randomInt(100000, 1000000).toString();
+
+  const appName = 'Smart Healthcare Limited';
+  const appUrl = 'mdjasimuddin.com.bd';
+  const userName = payload.user.name;
+  const supportEmail = config.email_sender;
+
+  redisClient.set(key, otpValue, {
+    expiration: {
+      type: 'EX',
+      value: expirationSeconds,
+    },
+  });
+
+  const emailVerifiedTempPath = path.join(
+    process.cwd(),
+    'src/app/templates/user-email-verified.ejs'
+  );
+
+  const EmailVerifiedTempData = {
+    otpValue,
+    appName,
+    appUrl,
+    userName,
+    expirationMinutes: expirationSeconds / 60,
+    supportEmail,
+  };
+
+  const htmlContent = await ejs.renderFile(emailVerifiedTempPath, EmailVerifiedTempData);
+
+  await transporter.sendMail({
+    from: config.email_sender,
+    to: email,
+    subject: `${otpValue} is your ${appName} verification code`,
+    html: htmlContent,
+  });
+
   return doctorApplication;
+};
+
+const verifyDoctorEmail = async (payload: IVerifyDoctorEmailPayload) => {
+  const otp = payload.otp;
+  const email = payload.email.trim().toLowerCase();
+
+  const isUserExists = await prisma.user.findUnique({
+    where: {
+      email,
+      role: Role.DOCTOR,
+    },
+  });
+
+  console.log('Doctor find', isUserExists);
+
+  if (!isUserExists) {
+    throw new Error('Doctor Application not found. Please apply again.');
+  }
+
+  if (isUserExists.emailVerified) {
+    throw new Error('Email Already Verified');
+  }
+
+  const key = `doctor-application-otp:${email}`;
+  const redisOTP = await redisClient.get(key);
+
+  if (!redisOTP) {
+    throw new Error('Invalid otp');
+  }
+
+  if (redisOTP !== otp) {
+    throw new Error('OTP does not match!');
+  }
+
+  await redisClient.del(key);
+
+  const verifiedUser = await prisma.user.update({
+    where: {
+      id: isUserExists.id,
+    },
+    data: {
+      emailVerified: true,
+    },
+    omit: {
+      password: true,
+    },
+    include: {
+      doctor: true,
+    },
+  });
+
+  return verifiedUser;
 };
 
 export const DoctorServices = {
   applyAsDoctor,
+  verifyDoctorEmail,
 };
