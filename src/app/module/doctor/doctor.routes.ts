@@ -4,6 +4,8 @@ import { DoctorController } from './doctor.controller';
 import { upload } from '../../lib/multer';
 import { catchAsync } from '../../utils/catchAsync';
 import z from 'zod';
+import { auth } from '../../middleware/checkAuth';
+import { Role } from '../../../generated/prisma/enums';
 
 const router = Router();
 
@@ -43,5 +45,7 @@ router.post(
 );
 
 router.post('/verify-doctor-email', DoctorController.verifyDoctorEmail);
+router.post('/approve-doctor', auth(Role.ADMIN, Role.SUPER_ADMIN), DoctorController.approveDoctor);
+router.get('/all-doctors', auth(Role.ADMIN, Role.SUPER_ADMIN), DoctorController.getAllDoctors);
 
 export const DoctorRoutes = router;

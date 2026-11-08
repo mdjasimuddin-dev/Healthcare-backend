@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Approved</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .email-header {
+            background-color: #2a9d8f;
+            color: #ffffff;
+            padding: 24px;
+            text-align: center;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .email-body {
+            padding: 30px;
+        }
+        .email-body p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #555555;
+        }
+        .doctor-name {
+            font-weight: 600;
+            color: #222222;
+        }
+        .success-box {
+            background-color: #e9f5f3;
+            border-left: 4px solid #2a9d8f;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success-box p {
+            margin: 0;
+            color: #1d6f64;
+            font-size: 14px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #2a9d8f;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        .email-footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #888888;
+            border-top: 1px solid #eeeeee;
+        }
+        .support-link {
+            color: #2a9d8f;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <h1>Application Approved from <% = appName %></h1>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <p>Dear Dr. <span class="doctor-name"><%= doctorName %></span>,</p>
+            
+            <p>Congratulations! We are thrilled to inform you that your application to join the <span class="doctor-name"><%= appName || 'Smart Healthcare Limited' %></span> network has been successfully approved after a thorough review of your professional credentials.</p>
+            
+            <div class="success-box">
+                <p><strong>Status:</strong> Your account is now active, and you have full access to start connecting with patients and managing consultations.</p>
+            </div>
+
+            <p>You can now log in to your dashboard using your registered credentials to complete your profile setup, set your availability, and configure your consultation preferences.</p>
+
+            <% if (locals.loginUrl) { %>
+                <div style="text-align: center;">
+                    <a href="<%= loginUrl %>" class="cta-button">Access Your Dashboard</a>
+                </div>
+            <% } %>
+
+            <p>If you have any questions or need assistance navigating the platform, please feel free to reach out to our support team at <a href="mailto:<%= supportEmail || 'support@example.com' %>" class="support-link"><%= supportEmail || 'support@example.com' %></a>.</p>
+
+            <p>We look forward to a wonderful collaboration and are excited to have you on board!</p>
+
+            <p>Warm regards,<br>
+            <strong><%= teamName || 'Credentialing & Support Team' %></strong><br>
+            <%= appName || 'Smart Healthcare Limited' %></p>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <p>&copy; <%= new Date().getFullYear() %> <%= appName || 'Smart Healthcare Limited' %>. All rights reserved.</p>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Status Update</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .email-header {
+            background-color: #0077b6;
+            color: #ffffff;
+            padding: 24px;
+            text-align: center;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .email-body {
+            padding: 30px;
+        }
+        .email-body p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #555555;
+        }
+        .doctor-name {
+            font-weight: 600;
+            color: #222222;
+        }
+        .reason-box {
+            background-color: #fff3f3;
+            border-left: 4px solid #e63946;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .reason-box p {
+            margin: 0;
+            color: #900c3f;
+            font-size: 14px;
+        }
+        .email-footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #888888;
+            border-top: 1px solid #eeeeee;
+        }
+        .support-link {
+            color: #0077b6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <h1>Application Status Notification</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <p>Dear Dr. <span class="doctor-name"><%= name %></span>,</p>
+            
+            <p>Thank you for submitting your application to join the <%= platformName || 'Smart Healthcare Limited' %> network. We truly appreciate the time and effort you took to share your professional background with us.</p>
+            
+            <p>After careful review by our credentialing and medical board committee, we regret to inform you that we are unable to approve your application at this time.</p>
+
+            <% if (locals.rejectionReason) { %>
+                <div class="reason-box">
+                    <p><strong>Reason / Remarks:</strong> <%= rejectionReason %></p>
+                </div>
+            <% } %>
+
+            <p>This decision does not diminish your professional qualifications; however, it aligns with our current network capacity, specific compliance criteria, or regional requirements.</p>
+
+            <p>If you have any questions or believe this decision was made due to a misunderstanding of your credentials, please feel free to reach out to our support team at <a href="mailto:<%= supportEmail || 'support@example.com' %>" class="support-link"><%= supportEmail || 'support@example.com' %></a>.</p>
+
+            <p>We sincerely wish you the best in your medical practice and future professional endeavors.</p>
+
+            <p>Warm regards,<br>
+            <strong><%= teamName || 'Credentialing Team' %></strong><br>
+            <%= platformName || 'Smart Healthcare Limited' %></p>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <p>&copy; <%= new Date().getFullYear() %> <%= platformName || 'Smart Healthcare Limited' %>. All rights reserved.</p>
+        </div>
+    </div>
+
+</body>
+</html>
