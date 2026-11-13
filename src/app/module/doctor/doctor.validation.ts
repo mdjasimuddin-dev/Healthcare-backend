@@ -24,3 +24,14 @@ export const applyDoctorRegistrationZodSchema = z.object({
     contactNumber: z.string().regex(/^\+8801[3-9]\d{8}$/, 'Invalid Bangladeshi phone number'),
   }),
 });
+
+export const doctorUpdateProfileZodSchema = z.object({
+  address: z.string({ message: 'Enter your address' }).optional(),
+  specialization: z.string({ message: 'Enter your specialization' }).optional(),
+  licenseNumber: z.string({ message: 'Enter your license number' }).optional(),
+  qualifications: z.string({ message: 'Enter your qualifications' }).optional(),
+  experienceYears: z.number({ message: 'Enter your experience in years' }).optional(),
+  bio: z.string({ message: 'Enter your bio' }).optional(),
+  consultationsFee: z.number({ message: 'Enter your consultation fee' }).optional(),
+  contactNumber: z.string({ message: 'Enter your contact number' }).optional(),
+});

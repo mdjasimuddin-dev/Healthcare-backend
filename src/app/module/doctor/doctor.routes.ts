@@ -6,6 +6,7 @@ import { catchAsync } from '../../utils/catchAsync';
 import z from 'zod';
 import { auth } from '../../middleware/checkAuth';
 import { Role } from '../../../generated/prisma/enums';
+import { doctorUpdateProfileZodSchema } from './doctor.validation';
 
 const router = Router();
 
@@ -47,5 +48,14 @@ router.post(
 router.post('/verify-doctor-email', DoctorController.verifyDoctorEmail);
 router.post('/approve-doctor', auth(Role.ADMIN, Role.SUPER_ADMIN), DoctorController.approveDoctor);
 router.get('/all-doctors', auth(Role.ADMIN, Role.SUPER_ADMIN), DoctorController.getAllDoctors);
+router.get(
+  '/update-my-profile',
+  auth(Role.DOCTOR),
+  ValidateRequest(doctorUpdateProfileZodSchema),
+  DoctorController.updateDoctorProfile
+);
+router.get('/public/all-doctors', DoctorController.getAllDoctorsListPublic);
+router.get('/public/:doctorId', DoctorController.getSingleDoctorProfilePublic);
+router.get('/public/today-available-doctor', DoctorController.getAvailableDoctorByTodaySchedule);
 
 export const DoctorRoutes = router;

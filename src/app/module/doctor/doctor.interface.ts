@@ -27,3 +27,14 @@ export interface IApproveDoctorPayload {
   verificationStatus: DoctorVerificationStatus;
   rejectionResoan: string;
 }
+
+export interface IUpdateDoctorProfilePayload {
+  address?: string;
+  specialization?: string;
+  licenseNumber?: string;
+  qualifications?: string;
+  experienceYears?: number;
+  bio?: string;
+  consultationsFee?: number;
+  contactNumber?: string;
+}
