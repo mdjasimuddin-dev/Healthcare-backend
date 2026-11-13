@@ -12,6 +12,10 @@ import { UserRoute } from './app/module/user/user.route';
 import { getBkashIdToken } from './app/lib/bkash';
 import { AppointmentRoute } from './app/module/appointment/appointment.route';
 import { DoctorRoutes } from './app/module/doctor/doctor.routes';
+import { ScheduleRoute, ScheduleRoutes } from './app/module/schedule/schedule.route';
+import { PrescripitonRoutes } from './app/module/prescription/prescription.route';
+import { PaymentRoutes } from './app/module/payment/payment.routes';
+import { AnalyticsRoutes } from './app/module/analytics/analytics.route';
 
 const app: Application = express();
 
@@ -33,6 +37,10 @@ app.use('/api/v1/auth', AuthRoutes);
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/appointment', AppointmentRoute);
 app.use('/api/v1/doctor', DoctorRoutes);
+app.use('/api/v1/schedule', ScheduleRoutes);
+app.use('/api/v1/payment', PaymentRoutes);
+app.use('/api/v1/prescription', PrescripitonRoutes);
+app.use('/api/v1/analytics', AnalyticsRoutes);
 app.post('/test', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await getBkashIdToken();

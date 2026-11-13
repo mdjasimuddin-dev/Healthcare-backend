@@ -1,3 +1,4 @@
+import httpStatus from 'http-status';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import ejs from 'ejs';
@@ -21,6 +22,7 @@ import type {
   IResetPasswordPayload,
   IVerifyPatientEmailPayload,
 } from './auth.interface';
+import { AppError } from '../../utils/appError';
 
 const registerPatient = async (payload: IRegisterPatientPayload) => {
   const { name, password, patient: patientData } = payload;
@@ -221,7 +223,7 @@ const loginUser = async (payload: ILoginUserPayload) => {
   });
 
   if (!user) {
-    throw new Error('User not found');
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   if (user.status === UserStatus.BLOCKED) {

@@ -8,7 +8,7 @@ import { userValidation } from './usersValidation';
 
 const router = Router();
 
-const ValidateRequest = (zodSchema: z.ZodObject) => {
+export const ValidateRequest = (zodSchema: z.ZodObject) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const payload = req.body ?? {};
