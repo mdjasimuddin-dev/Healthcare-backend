@@ -218,9 +218,13 @@ const loginUser = async (payload: ILoginUserPayload) => {
   const { password } = payload;
   const email = payload.email.trim().toLowerCase();
 
+  console.log(email, password, 'from controller');
+
   const user = await prisma.user.findUnique({
     where: { email },
   });
+
+  console.log('User find form Database : ', user);
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -237,7 +241,7 @@ const loginUser = async (payload: ILoginUserPayload) => {
   const isPasswordMatched = await bcrypt.compare(password, user.password as string);
 
   if (!isPasswordMatched) {
-    throw new Error('Invalid credentials');
+    throw new AppError(httpStatus.FORBIDDEN, 'Invalid credentials');
   }
 
   const jwtPayload = {

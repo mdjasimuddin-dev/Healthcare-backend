@@ -291,7 +291,7 @@ const getAllDoctors = async (query: IQuery) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
-  const sortBy = query.sortBy ? query.sortBy : 'createdAt';
+  const sortBy = query.sortBy ? query.sortBy : 'createAt';
   const sortOrder = query.sortOrder ? query.sortOrder : 'desc';
 
   // const tags = query.tags ? JSON.parse(query.tags as string) : null;
@@ -437,7 +437,7 @@ const getAllDoctorsListPublic = async (query: IQuery) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
-  const sortBy = query.sortBy ? query.sortBy : 'createdAt';
+  const sortBy = query.sortBy ? query.sortBy : 'createAt';
   const sortOrder = query.sortOrder ? query.sortOrder : 'desc';
 
   const andConditions: DoctorWhereInput[] = [
@@ -512,7 +512,7 @@ const getAllDoctorsListPublic = async (query: IQuery) => {
       experienceYears: true,
       bio: true,
       consultationsFee: true,
-      createdAt: true,
+      createAt: true,
       // profilePhoto: true, experience: true, fee: true, bio: true -> schema te thakle add koro
     },
   });
@@ -562,11 +562,11 @@ const getAvailableDoctorByTodaySchedule = async (query: IQuery) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
-  const sortBy = query.sortBy ? query.sortBy : 'createdAt';
+  const sortBy = query.sortBy ? query.sortBy : 'createAt';
   const sortOrder = query.sortOrder ? query.sortOrder : 'desc';
 
   const now = new Date();
-  const startOfToday = startOfDay(new Date()); // aj 12:00 AM
+  const startOfToday = startOfDay(now); // aj 12:00 AM
   const startOfTomorrow = addDays(startOfToday, 1); // kal 12:00 AM
 
   const andConditions: DoctorWhereInput[] = [];
@@ -617,7 +617,7 @@ const getAvailableDoctorByTodaySchedule = async (query: IQuery) => {
     }
   );
 
-  const allDoctors = await prisma.doctor.findMany({
+  const availableDoctor = await prisma.doctor.findMany({
     where: {
       AND: andConditions,
     },
@@ -649,7 +649,7 @@ const getAvailableDoctorByTodaySchedule = async (query: IQuery) => {
             gt: now,
           },
         },
-        orderBy: { [sortBy]: sortOrder },
+        orderBy: { startDateTime: 'asc' },
         select: {
           id: true,
           startDateTime: true,
@@ -667,7 +667,7 @@ const getAvailableDoctorByTodaySchedule = async (query: IQuery) => {
     },
   });
   return {
-    data: allDoctors,
+    data: availableDoctor,
     meta: {
       page: page,
       limit: limit,

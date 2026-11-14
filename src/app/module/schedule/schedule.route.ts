@@ -27,6 +27,7 @@ export const ValidateRequest = (zodSchema: z.ZodObject) => {
   });
 };
 
+// done
 router.post(
   '/create-schedule',
   auth(Role.DOCTOR),

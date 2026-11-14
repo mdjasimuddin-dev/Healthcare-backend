@@ -1,19 +1,21 @@
+import httpStatus from 'http-status';
 import bcrypt from 'bcryptjs';
 import config from '../config';
 import { prisma } from '../lib/prisma';
 import { Role } from './../../generated/prisma/enums';
+import { AppError } from './appError';
 
 // super admin
 
 export const SeedSuperAdmin = async () => {
   try {
-    const isExitsSuperAdmin = await prisma.user.findFirst({
+    const isSuperAdminExit = await prisma.user.findFirst({
       where: {
         role: Role.SUPER_ADMIN,
       },
     });
 
-    if (isExitsSuperAdmin) {
+    if (isSuperAdminExit) {
       console.log('Super admin already exits.');
       return;
     }
@@ -23,7 +25,10 @@ export const SeedSuperAdmin = async () => {
     const password = config.super_admin_password;
 
     if (!name || !email || !password) {
-      console.log('Super Admin name, email, password missing in env file.');
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        'Super Admin name, email, password missing in env file.'
+      );
     }
 
     const hashPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
@@ -45,33 +50,36 @@ export const SeedSuperAdmin = async () => {
 
     prisma.user.delete({
       where: {
-        email: config.super_admin_password,
+        email: config.super_admin_email,
       },
     });
   }
 };
 
-// tester admin
+// create tester admin
 
 export const seedTesterAdmin = async () => {
   try {
-    const isExitsTestAdmin = await prisma.user.findUnique({
+    const isTestAdminExist = await prisma.user.findUnique({
       where: {
         email: config.tester_admin_email,
       },
     });
 
-    if (isExitsTestAdmin) {
+    if (isTestAdminExist) {
       console.log('Tester admin already exits.');
       return;
     }
 
     const name = config.tester_admin_name;
     const email = config.tester_admin_email;
-    const password = config.super_admin_password;
+    const password = config.tester_admin_password;
 
     if (!name || !email || !password) {
-      console.log('Tester Admin name, email, password missing in env file.');
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        'Tester admin name, email, password is missing in env file.'
+      );
     }
 
     const hashPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
@@ -84,16 +92,6 @@ export const seedTesterAdmin = async () => {
         role: Role.ADMIN,
         needPasswordChange: false,
         emailVerified: true,
-        doctor: {
-          create: {
-            email,
-            name,
-            experienceYears: 5,
-            licenseNumber: 'BMDC-0001',
-            qualifications: 'MMBS',
-            specialization: 'Neurology',
-          },
-        },
       },
     });
 
@@ -113,13 +111,13 @@ export const seedTesterAdmin = async () => {
 
 export const seedTesterDoctor = async () => {
   try {
-    const isExitsTesterDoctor = await prisma.user.findUnique({
+    const isTesterDoctorExits = await prisma.user.findUnique({
       where: {
         email: config.tester_doctor_email,
       },
     });
 
-    if (isExitsTesterDoctor) {
+    if (isTesterDoctorExits) {
       console.log('Tester Doctor already exits.');
       return;
     }
@@ -129,7 +127,10 @@ export const seedTesterDoctor = async () => {
     const password = config.tester_doctor_password;
 
     if (!name || !email || !password) {
-      console.log('Tester Doctor name, email, password missing in env file.');
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        'Tester doctor name, email, password is missing in env file.'
+      );
     }
 
     const hashPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
@@ -142,6 +143,16 @@ export const seedTesterDoctor = async () => {
         role: Role.DOCTOR,
         needPasswordChange: false,
         emailVerified: true,
+        doctor: {
+          create: {
+            email,
+            name,
+            experienceYears: 5,
+            licenseNumber: 'BMDC-0001',
+            qualifications: 'MMBS',
+            specialization: 'Neurology',
+          },
+        },
       },
     });
 

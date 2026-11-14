@@ -54,8 +54,8 @@ router.get(
   ValidateRequest(doctorUpdateProfileZodSchema),
   DoctorController.updateDoctorProfile
 );
+router.get('/public/today-available-doctor', DoctorController.getAvailableDoctorByTodaySchedule);
 router.get('/public/all-doctors', DoctorController.getAllDoctorsListPublic);
 router.get('/public/:doctorId', DoctorController.getSingleDoctorProfilePublic);
-router.get('/public/today-available-doctor', DoctorController.getAvailableDoctorByTodaySchedule);
 
 export const DoctorRoutes = router;

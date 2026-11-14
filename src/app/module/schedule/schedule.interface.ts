@@ -1,11 +1,11 @@
 export interface ICreateSchedulePayload {
-  starDateTime: Date;
+  startDateTime: Date;
   endDateTime: Date;
   meetingLink: string;
 }
 
 export interface IUpdateSchedulePayload {
-  starDateTime?: Date;
+  startDateTime?: Date;
   endDateTime?: Date;
   meetingLink?: string;
 }

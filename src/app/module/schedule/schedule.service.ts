@@ -9,6 +9,7 @@ import { IQuery } from '../../interfaces';
 import { ScheduleWhereInput } from '../../../generated/prisma/models';
 import { ScheduleStatus } from '../../../generated/prisma/enums';
 
+// done
 const createSchedule = async (payload: ICreateSchedulePayload, user: IRequestUser) => {
   const doctor = await prisma.doctor.findUnique({
     where: {
@@ -20,18 +21,18 @@ const createSchedule = async (payload: ICreateSchedulePayload, user: IRequestUse
     throw new AppError(httpStatus.NOT_FOUND, 'Doctor profile not found');
   }
 
-  if (!isSameDay(payload.starDateTime, payload.endDateTime)) {
+  if (!isSameDay(payload.startDateTime, payload.endDateTime)) {
     throw new AppError(
       httpStatus.CONFLICT,
       'Start Date time and end date time must be on the same day.'
     );
   }
 
-  if (isAfter(payload.starDateTime, payload.endDateTime)) {
+  if (isAfter(payload.startDateTime, payload.endDateTime)) {
     throw new AppError(httpStatus.CONFLICT, 'Start Date time cannot be after end date time.');
   }
 
-  const startOfTheDay = startOfDay(payload.starDateTime); // 25 August => 12:00 AM
+  const startOfTheDay = startOfDay(payload.startDateTime); // 25 August => 12:00 AM
   const startNextDay = addDays(startOfTheDay, 1); // 26 Augest => 12:00 AM
 
   const existingScheduleOnThisDate = await prisma.schedule.findFirst({
@@ -49,7 +50,7 @@ const createSchedule = async (payload: ICreateSchedulePayload, user: IRequestUse
     throw new AppError(httpStatus.CONFLICT, 'You alreay have a schedule for this date');
   }
 
-  const durationInMinutes = differenceInMinutes(payload.starDateTime, payload.endDateTime);
+  const durationInMinutes = differenceInMinutes(payload.endDateTime, payload.startDateTime);
 
   const MINUTES_ALLOCATED_PER_SLOT = 20;
 
@@ -57,7 +58,7 @@ const createSchedule = async (payload: ICreateSchedulePayload, user: IRequestUse
 
   const schedule = await prisma.schedule.create({
     data: {
-      startDateTime: payload.starDateTime,
+      startDateTime: payload.startDateTime,
       endDateTime: payload.endDateTime,
       meetingLink: payload.meetingLink,
       totalSlots,
@@ -78,6 +79,7 @@ const createSchedule = async (payload: ICreateSchedulePayload, user: IRequestUse
   return schedule;
 };
 
+// done
 const getMySchedules = async (query: IQuery, user: IRequestUser) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
@@ -144,7 +146,7 @@ const getAllSchedules = async (query: IQuery) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
-  const sortBy = query.sortBy ? query.sortBy : 'createdAt';
+  const sortBy = query.sortBy ? query.sortBy : 'createAt';
   const sortOrder = query.sortOrder ? query.sortOrder : 'desc';
 
   const andConditions: ScheduleWhereInput[] = [];
@@ -199,8 +201,29 @@ const getAllSchedules = async (query: IQuery) => {
     });
   }
 
+  const schedules = await prisma.schedule.findMany({
+    where: {
+      AND: andConditions,
+    },
 
-  
+    take: limit,
+    skip,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  const total = await prisma.schedule.count({ where: { AND: andConditions } });
+
+  return {
+    data: schedules,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 const getScheduleById = async (scheduleId: string) => {
@@ -343,6 +366,7 @@ const updateschedule = async (
   return Updatedschedule;
 };
 
+// done
 const publishedSchedule = async (scheduleId: string, user: IRequestUser) => {
   const doctor = await prisma.doctor.findUnique({
     where: {
