@@ -368,6 +368,7 @@ const updateschedule = async (
 
 // done
 const publishedSchedule = async (scheduleId: string, user: IRequestUser) => {
+  // console.log('Schedule Id form service line 373', scheduleId);
   const doctor = await prisma.doctor.findUnique({
     where: {
       userId: user.userId,

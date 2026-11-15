@@ -22,6 +22,7 @@ import { DoctorWhereInput } from '../../../generated/prisma/models';
 import { AppError } from '../../utils/appError';
 import { addDays, startOfDay } from 'date-fns';
 
+// done
 const applyAsDoctor = async (
   payload: IApplyAsDoctorPayload,
   resume: Express.Multer.File | null,
@@ -29,7 +30,7 @@ const applyAsDoctor = async (
 ) => {
   const isUserExists = await prisma.user.findUnique({
     where: {
-      email: payload.user.email,
+      email: payload.user.email.trim().toLowerCase(),
     },
   });
 
@@ -147,6 +148,7 @@ const applyAsDoctor = async (
   return doctorApplication;
 };
 
+// done
 const verifyDoctorEmail = async (payload: IVerifyDoctorEmailPayload) => {
   const otp = payload.otp;
   const email = payload.email.trim().toLowerCase();

@@ -6,6 +6,7 @@ import { sendResponse } from '../../utils/sendResponse';
 import { DoctorServices } from './doctor.services';
 import { applyDoctorRegistrationZodSchema } from './doctor.validation';
 
+// done 
 const applyAsDoctor = catchAsync(async (req: Request, res: Response) => {
   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
@@ -33,6 +34,7 @@ const applyAsDoctor = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// done 
 const verifyDoctorEmail = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
 
@@ -47,6 +49,7 @@ const verifyDoctorEmail = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 
 const approveDoctor = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -121,6 +124,7 @@ const getSingleDoctorProfilePublic = catchAsync(async (req: Request, res: Respon
   });
 });
 
+// done
 const getAvailableDoctorByTodaySchedule = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
 

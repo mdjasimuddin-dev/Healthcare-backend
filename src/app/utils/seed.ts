@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import bcrypt from 'bcryptjs';
 import config from '../config';
 import { prisma } from '../lib/prisma';
-import { Role } from './../../generated/prisma/enums';
+import { DoctorVerificationStatus, Role } from './../../generated/prisma/enums';
 import { AppError } from './appError';
 
 // super admin
@@ -151,6 +151,7 @@ export const seedTesterDoctor = async () => {
             licenseNumber: 'BMDC-0001',
             qualifications: 'MMBS',
             specialization: 'Neurology',
+            verificationStatus: DoctorVerificationStatus.APPROVED,
           },
         },
       },
