@@ -4,6 +4,7 @@ import { AppointmentService } from './appointment.services';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 
+// done
 const bookAppointment = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
   const user = req.user!;
