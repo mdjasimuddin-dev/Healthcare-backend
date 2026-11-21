@@ -1,37 +1,45 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const applyDoctorRegistrationZodSchema = z.object({
-  user: z.object({
-    name: z.string().min(3, 'Name must be at least 3 characters'),
-    email: z.email('Invalid email address'),
-  }),
+	user: z.object({
+		name: z.string().min(3, "Name must be at least 3 characters"),
+		email: z.email("Invalid email address"),
+	}),
 
-  doctor: z.object({
-    address: z.string().min(5, 'Address is required'),
-    specialization: z.string().min(2, 'Specialization is required'),
-    licenseNumber: z.string().min(5, 'License number is required'),
-    qualifications: z.string().min(2, 'Qualifications are required'),
+	doctor: z.object({
+		address: z.string().min(5, "Address is required"),
+		specialization: z.string().min(2, "Specialization is required"),
+		licenseNumber: z.string().min(5, "License number is required"),
+		qualifications: z.string().min(2, "Qualifications are required"),
 
-    experienceYears: z
-      .number()
-      .int('Experience must be an integer')
-      .min(0, 'Experience cannot be negative'),
+		experienceYears: z
+			.number()
+			.int("Experience must be an integer")
+			.min(0, "Experience cannot be negative"),
 
-    bio: z.string().min(20, 'Bio must be at least 20 characters'),
+		bio: z.string().min(20, "Bio must be at least 20 characters"),
 
-    consultationsFee: z.number().positive('Consultation fee must be greater than 0'),
+		consultationsFee: z
+			.number()
+			.positive("Consultation fee must be greater than 0"),
 
-    contactNumber: z.string().regex(/^\+8801[3-9]\d{8}$/, 'Invalid Bangladeshi phone number'),
-  }),
+		contactNumber: z
+			.string()
+			.regex(/^\+8801[3-9]\d{8}$/, "Invalid Bangladeshi phone number"),
+	}),
 });
 
 export const doctorUpdateProfileZodSchema = z.object({
-  address: z.string({ message: 'Enter your address' }).optional(),
-  specialization: z.string({ message: 'Enter your specialization' }).optional(),
-  licenseNumber: z.string({ message: 'Enter your license number' }).optional(),
-  qualifications: z.string({ message: 'Enter your qualifications' }).optional(),
-  experienceYears: z.number({ message: 'Enter your experience in years' }).optional(),
-  bio: z.string({ message: 'Enter your bio' }).optional(),
-  consultationsFee: z.number({ message: 'Enter your consultation fee' }).optional(),
-  contactNumber: z.string({ message: 'Enter your contact number' }).optional(),
+	address: z.string({ message: "Enter your address" }).optional(),
+	specialization: z.string({ message: "Enter your specialization" }).optional(),
+	licenseNumber: z.string({ message: "Enter your license number" }).optional(),
+	qualifications: z.string({ message: "Enter your qualifications" }).optional(),
+	experienceYears: z
+		.number({ message: "Enter your experience in years" })
+		.optional(),
+	bio: z.string({ message: "Enter your bio" }).optional(),
+	consultationsFee: z
+		.number({ message: "Enter your consultation fee" })
+		.optional(),
+	contactNumber: z.string({ message: "Enter your contact number" }).optional(),
 });

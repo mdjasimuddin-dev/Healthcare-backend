@@ -1,12 +1,12 @@
 import { skip } from 'node:test';
 import httpStatus from 'http-status';
 import { prisma } from '../../lib/prisma';
-import { IRequestUser } from '../../middleware/checkAuth';
+import type { IRequestUser } from '../../middleware/checkAuth';
 import { AppError } from '../../utils/appError';
-import { ICreateSchedulePayload, IUpdateSchedulePayload } from './schedule.interface';
+import type { ICreateSchedulePayload, IUpdateSchedulePayload } from './schedule.interface';
 import { addDays, differenceInMinutes, isAfter, isSameDay, startOfDay } from 'date-fns';
-import { IQuery } from '../../interfaces';
-import { ScheduleWhereInput } from '../../../generated/prisma/models';
+import type { IQuery } from '../../interfaces';
+import type { ScheduleWhereInput } from '../../../generated/prisma/models';
 import { ScheduleStatus } from '../../../generated/prisma/enums';
 
 // done

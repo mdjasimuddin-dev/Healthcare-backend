@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { ScheduleService } from './schedule.service';
 import { sendResponse } from '../../utils/sendResponse';
@@ -35,10 +35,9 @@ const getMySchedules = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllSchedules = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
-  const user = req.user!;
+  const query = req.query;
 
-  const result = await ScheduleService.getAllSchedules(payload);
+  const result = await ScheduleService.getAllSchedules(query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -49,10 +48,9 @@ const getAllSchedules = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getTodaysSchedules = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
-  const user = req.user!;
+  const query = req.query;
 
-  const result = await ScheduleService.getTodaysSchedule(payload);
+  const result = await ScheduleService.getTodaysSchedule(query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -63,10 +61,9 @@ const getTodaysSchedules = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getScheduleById = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
-  const user = req.user!;
+  const scheduleId = req.params.scheduleId as string;
 
-  const result = await ScheduleService.getScheduleById(payload);
+  const result = await ScheduleService.getScheduleById(scheduleId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -77,15 +74,16 @@ const getScheduleById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateSchedule = catchAsync(async (req: Request, res: Response) => {
+  const scheduleId = req.params.scheduleId as string;
   const payload = req.body;
   const user = req.user!;
 
-  const result = await ScheduleService.updateschedule();
+  const result = await ScheduleService.updateschedule(scheduleId, payload, user);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Appointment Payment Initialize successfully',
+    message: 'Schedule Update successfully',
     data: result,
   });
 });
@@ -105,10 +103,10 @@ const publishedSchedule = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deteleSchedule = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
+  const scheduleId = req.params.sheduleId as string;
   const user = req.user!;
 
-  const result = await ScheduleService.deleteSchedule(payload);
+  const result = await ScheduleService.deleteSchedule(scheduleId, user);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

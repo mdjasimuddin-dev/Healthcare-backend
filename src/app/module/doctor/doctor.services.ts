@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import { prisma } from '../../lib/prisma';
-import { UploadApiResponse } from 'cloudinary';
+import type { UploadApiResponse } from 'cloudinary';
 import { cloudinary } from '../../lib/cloudinary';
 import { DoctorVerificationStatus, Role, ScheduleStatus } from '../../../generated/prisma/enums';
 import bcrypt from 'bcryptjs';
@@ -10,15 +10,15 @@ import { redisClient } from '../../lib/redis';
 import path from 'node:path';
 import ejs from 'ejs';
 import { transporter } from '../../lib/nodemailer';
-import {
+import type {
   IApplyAsDoctorPayload,
   IApproveDoctorPayload,
   IUpdateDoctorProfilePayload,
   IVerifyDoctorEmailPayload,
 } from './doctor.interface';
-import { IRequestUser } from '../../middleware/checkAuth';
-import { IQuery } from '../../interfaces';
-import { DoctorWhereInput } from '../../../generated/prisma/models';
+import type { IRequestUser } from '../../middleware/checkAuth';
+import type { IQuery } from '../../interfaces';
+import type { DoctorWhereInput } from '../../../generated/prisma/models';
 import { AppError } from '../../utils/appError';
 import { addDays, startOfDay } from 'date-fns';
 
