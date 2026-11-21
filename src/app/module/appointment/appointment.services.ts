@@ -218,19 +218,6 @@ const payAppointment = async (
 		throw new Error("Appointment is not pending");
 	}
 
-	// if (existingAppointment.status === 'CONFIRMED') {
-	//   throw new Error('Appointment allready paid and confirmed');
-	// }
-
-	// if (
-	//   existingAppointment.status === 'COMPLETED' ||
-	//   existingAppointment.status === 'ONGOING' ||
-	//   existingAppointment.status === 'CANCEL'
-	// ) {
-	//   const currentStatus = existingAppointment.status;
-	//   throw new Error(`Appointment is already ${currentStatus.toLowerCase}`);
-	// }
-
 	if (!existingAppointment.schedule.doctor.consultationsFee) {
 		throw new AppError(
 			httpStatus.BAD_REQUEST,

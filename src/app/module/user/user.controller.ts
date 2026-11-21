@@ -1,4 +1,4 @@
-import { upload } from "./../../lib/multer";
+
 import httpStatus from "http-status";
 import type { Request, Response } from "express";
 import { sendResponse } from "../../utils/sendResponse";

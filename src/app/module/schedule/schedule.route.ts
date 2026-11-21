@@ -1,10 +1,8 @@
-import { type NextFunction, type Request, type Response, Router } from 'express';
+import { Router } from 'express';
 import { auth } from '../../middleware/checkAuth';
 import { Role } from '../../../generated/prisma/enums';
 import { CreateScheduleZodSchema, UpdateScheduleZodSchema } from './schedule.validation';
-import { catchAsync } from '../../utils/catchAsync';
 import { ScheduleController } from './schedule.controller';
-import type z from 'zod';
 import { ValidateRequest } from '../auth/auth.route';
 
 const router = Router();

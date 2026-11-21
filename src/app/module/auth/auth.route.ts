@@ -1,67 +1,66 @@
-import {
-	type NextFunction,
-	type Request,
-	type Response,
-	Router,
-} from "express";
-import type z from "zod";
-import { Role } from "../../../generated/prisma/enums";
-import { auth } from "../../middleware/checkAuth";
-import { catchAsync } from "../../utils/catchAsync";
-import { AuthController } from "./auth.controller";
-import { userValidation } from "./usersValidation";
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import type z from 'zod';
+import { Role } from '../../../generated/prisma/enums';
+import { auth } from '../../middleware/checkAuth';
+import { catchAsync } from '../../utils/catchAsync';
+import { AuthController } from './auth.controller';
+import { userValidation } from './usersValidation';
 
 const router = Router();
 
 export const ValidateRequest = (zodSchema: z.ZodObject) => {
-	return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-		try {
-			const payload = req.body ?? {};
-			const result = zodSchema.safeParse(payload);
-			if (!result.success) {
-				const errorFormat = result.error.issues
-					.map((issue) => issue.message)
-					.join();
-				throw new Error(errorFormat);
-			}
+  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const payload = req.body ?? {};
+      const result = zodSchema.safeParse(payload);
+      if (!result.success) {
+        const errorFormat = result.error.issues.map((issue) => issue.message).join();
+        throw new Error(errorFormat);
+      }
 
-			req.body = result.data;
+      req.body = result.data;
 
-			next();
-		} catch (error) {
-			next(error);
-		}
-	});
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
 };
 
 router.post(
-	"/register",
-	ValidateRequest(userValidation.PatientRegistrationZodSchema),
-	AuthController.registerPatient,
-);
-router.post(
-	"/verify-patient",
-	ValidateRequest(userValidation.EmailVerifyZodSchema),
-	AuthController.verifyPatient,
-);
-router.post("/login", AuthController.loginUser);
-router.get(
-	"/me",
-	auth(Role.ADMIN, Role.DOCTOR, Role.PATIENT, Role.SUPER_ADMIN),
-	AuthController.getMe,
+  '/register',
+  ValidateRequest(userValidation.PatientRegistrationZodSchema),
+  AuthController.registerPatient
 );
 
-router.post("/refresh-token", AuthController.refreshToken);
-router.post("/google", AuthController.googleLogin);
 router.post(
-	"/forget-password",
-	ValidateRequest(userValidation.ForgetPasswordZodSchema),
-	AuthController.forgetPassword,
+  '/verify-patient',
+  ValidateRequest(userValidation.EmailVerifyZodSchema),
+  AuthController.verifyPatient
 );
+
+router.post('/login', AuthController.loginUser);
+
+router.get(
+  '/me',
+  auth(Role.ADMIN, Role.DOCTOR, Role.PATIENT, Role.SUPER_ADMIN),
+  AuthController.getMe
+);
+
+router.post('/refresh-token', AuthController.refreshToken);
+
+router.post('/google', AuthController.googleLogin);
+
 router.post(
-	"/reset-password",
-	ValidateRequest(userValidation.PasswordResetZodSchema),
-	AuthController.resetPassword,
+  '/forget-password',
+  ValidateRequest(userValidation.ForgetPasswordZodSchema),
+  AuthController.forgetPassword
+);
+
+router.post(
+  '/reset-password',
+  ValidateRequest(userValidation.PasswordResetZodSchema),
+  AuthController.resetPassword
 );
 
 export const AuthRoutes = router;
