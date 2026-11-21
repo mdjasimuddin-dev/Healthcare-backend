@@ -1,6 +1,6 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { type NextFunction, type Application, type Request, type Response } from 'express';
+import express, { NextFunction, type Application, type Request, type Response } from 'express';
 import httpStatus from 'http-status';
 import config from './app/config';
 import { globalErrorHandler } from './app/middleware/globalErrorHandler';
@@ -39,7 +39,6 @@ app.use('/api/v1/schedule', ScheduleRoutes);
 app.use('/api/v1/payment', PaymentRoutes);
 app.use('/api/v1/prescription', PrescripitonRoutes);
 app.use('/api/v1/analytics', AnalyticsRoutes);
-
 app.post('/test', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await getBkashIdToken();
